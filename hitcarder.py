@@ -124,21 +124,14 @@ class HitCarder(object):
         except json.decoder.JSONDecodeError as err:
             raise DecodeError('JSON decode error: ' + str(err))
 
-
         ## Captcha request ##
         main_url = 'https://healthreport.zju.edu.cn/ncov/wap/default/index'
         captcha_url = 'https://healthreport.zju.edu.cn/ncov/wap/default/code'
-        ocr = ddddocr.DdddOcr()
+        ocr = ddddocr.DdddOcr(show_ad=False)
 
-        sess = requests.session()
-        # 设置 cookie
-        cookie_dict = {'eai-sess': 'q7t9nc9lb4fjtc1pb3n5b61cu4'}
-        sess.cookies = requests.cookies.cookiejar_from_dict(cookie_dict)
-
-        resp = sess.get(captcha_url)
+        resp = self.sess.get(captcha_url)
         captcha = ocr.classification(resp.content)
-        print(captcha)
-    
+
         new_info = def_info.copy()
         new_info.update(magic_code_group)
         # form change
